@@ -7,10 +7,6 @@
 #include<tchar.h>
 #include<psapi.h>
 
-string threadState(HANDLE hThread);							//Determine state of a thread given its handle (already define in "utinity.h")
-string ProcessName(HANDLE hProcess);							//Given a Handle return its name
-vector<ThreadAndStatus> getThreadIDAndState(HANDLE hProcess);	//Given a Process Handle return a vector contain all its threadID and state for each state
-
 void additionalFunction(string userInput, string userCommand)
 {
 	if (userCommand == "listall") {
@@ -104,66 +100,4 @@ void additionalFunction(string userInput, string userCommand)
 	else {
 		cout << endl << "ERROR: Systax error!!! (utinity module) " << endl;
 	}
-}
-
-string ProcessName(HANDLE hProcess)
-{
-	if (hProcess == NULL)
-		return "<unknown>";
-
-	TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
-
-	HMODULE hMod;
-	DWORD cbNeeded;
-
-	if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded))
-	{
-		GetModuleBaseName(hProcess, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR));
-		return szProcessName;
-	}
-
-	return "<unknown>";
-}
-vector<ThreadAndStatus> getThreadIDAndState(HANDLE hProcess)
-{
-	vector<ThreadAndStatus> threadList;
-
-	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
-	THREADENTRY32 te32;
-
-	// Take a snapshot of all running threads  
-	hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-	if (hThreadSnap == INVALID_HANDLE_VALUE)
-		return threadList;
-
-	// Fill in the size of the structure before using it. 
-	te32.dwSize = sizeof(THREADENTRY32);
-
-	// Retrieve information about the first thread,
-	// and exit if unsuccessful
-	if (!Thread32First(hThreadSnap, &te32))
-	{
-		CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
-		return threadList;
-	}
-
-	// Now walk the thread list of the system, and display information about each thread associated with the specified process
-	do
-	{
-		if (te32.th32OwnerProcessID == GetProcessId(hProcess))
-		{
-			ThreadAndStatus ThreadInfo;
-			ThreadInfo.ID = te32.th32ThreadID;
-
-			HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, false, ThreadInfo.ID);
-			ThreadInfo.ThreadStatus = threadState(hThread);
-
-			threadList.push_back(ThreadInfo);
-		}
-	} while (Thread32Next(hThreadSnap, &te32));
-
-	//  Don't forget to clean up the snapshot object.
-	CloseHandle(hThreadSnap);
-
-	return threadList;
 }

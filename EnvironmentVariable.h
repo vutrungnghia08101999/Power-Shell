@@ -18,6 +18,21 @@ struct ProcessInformation
 	vector<ThreadAndStatus> ThreadList;
 };
 
+struct FileInformation
+{
+	string name;
+	string categories;
+	string dateLastWrite;
+	string timeLastWrite;
+
+	FileInformation(string name_x, string categories_x, string dateLastWrite_x, string timeLastWrite_x) {
+		name = name_x;
+		categories = categories_x;
+		dateLastWrite = dateLastWrite_x;
+		timeLastWrite = timeLastWrite_x;
+	}
+};
+
 class EnvironmentVariable{
 public:
     vector<string> Path;
@@ -31,6 +46,7 @@ public:
 
     EnvironmentVariable();
     void print();
+	void setCurrentPath();
 };
 
 void EnvironmentVariable::print()
@@ -71,14 +87,24 @@ EnvironmentVariable::EnvironmentVariable()
     Path.push_back("C:\\Users\\nghia.vt173284\\AppData\\Local\\Programs\\MiKTeX 2.9\\miktex\\bin\\x64");
 	Path.push_back("C:\\Program Files (x86)\\Google\\Chrome\\Application");
     Path.push_back("C:\\Users\\nghia.vt173284\\Desktop");
-    currentPath = "C:\\Users\\nghia.vt173284\\Desktop";
+    //currentPath = "C:\\Users\\nghia.vt173284\\Desktop";
     USERNAME = "nghia.vt173284";
     CommonProgramFiles = "C:\\Program Files\\Common Files";
     CommonProgramFiles_x86 = "C:\\Program Files (x86)\\Common Files";
 	COMPUTERNAME = "DESKTOP-A6CCJ7I";
     NUMBER_OF_PROCESSORS = 8;
     OS = "Windows_NT";
+	setCurrentPath();
 }
+
+void EnvironmentVariable::setCurrentPath()
+{
+	char buffer[MAX_PATH];
+	GetModuleFileName(NULL, buffer, MAX_PATH);
+	string::size_type pos = string(buffer).find_last_of("\\/");
+	currentPath = string(buffer).substr(0, pos);
+}
+
 
 
 

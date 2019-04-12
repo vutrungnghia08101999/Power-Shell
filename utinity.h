@@ -5,10 +5,7 @@
 #include<tlhelp32.h>
 #include<tchar.h>
 #include<psapi.h>
-
-vector<string> dir(string path, int *pivot);				//return all files and folder in this path, pivot to separate folder and file
-ProcessInformation ProcessInformations(HANDLE hProcess);	//return a struct that contains all information about the process such as name, ID, Thread list and state for each thread
-string threadState(HANDLE hThread);							//Determine state of a thread given its handle
+#include<ctype.h>
 
 void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PROCESS_INFORMATION *processList, int *NUMBER_OF_PROCESS)
 {
@@ -33,17 +30,13 @@ void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PRO
 	}
 
 	else if (userCommand == "dir") {
-		int pivot = 0;
-		vector<string> List = dir(Env->currentPath, &pivot);
+		vector<FileInformation> List = dir(Env->currentPath);
 		cout << endl << endl;
-		printf("%-30s%-30s\n", "Categories", "Name");
-		printf("%-30s%-30s\n", "------------", "-------");
-		for (int i = 0; i <= pivot; ++i) {
-			printf("%-30s%-30s\n", "FOLDER", List[i].c_str());
-		}
-		for (int i = pivot + 1; i < List.size(); ++i) {
-			printf("%-30s%-30s\n", "FILE", List[i].c_str());
-		}
+		printf("%-15s%-15s%-15s%-30s\n", "Categories", "Date", "Time", "Name");
+		printf("%-15s%-15s%-15s%-30s\n", "-----------", "-------", "------", "---------");
+
+		for (int i = 0; i < List.size(); ++i)
+			printf("%-15s%-15s%-15s%-30s\n", List[i].categories.c_str(), List[i].dateLastWrite.c_str(), List[i].timeLastWrite.c_str(), List[i].name.c_str());
 		cout << endl << endl;
 	}
 	else if (userCommand == "list") {
@@ -142,122 +135,5 @@ void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PRO
 	}
 	else {
 		cout << endl << "ERROR: Systax error!!! (utinity module) " << endl;
-	}
-}
-
-vector<string> dir(string path, int *pivot)
-{
-	path += "\\*";
-	WIN32_FIND_DATA FindFileData;
-	HANDLE hFind;
-	vector<string> List;
-	TCHAR p[200] = {};
-	for (int i = 0; i < path.size(); ++i)
-		p[i] = path[i];
-
-	hFind = FindFirstFile(p, &FindFileData);
-	do
-	{
-		if (FindFileData.dwFileAttributes == 16) {
-			List.push_back(FindFileData.cFileName);
-		}
-	} while (FindNextFile(hFind, &FindFileData));
-	FindClose(hFind);
-
-	*pivot = (int)List.size() - 1;
-
-	hFind = FindFirstFile(p, &FindFileData);
-	do
-	{
-		if (FindFileData.dwFileAttributes == 32) {
-			List.push_back(FindFileData.cFileName);
-		}
-	} while (FindNextFile(hFind, &FindFileData));
-	FindClose(hFind);
-
-	return List;
-}
-
-
-ProcessInformation ProcessInformations(HANDLE hProcess)
-{
-	ProcessInformation PI;
-
-	if (hProcess == NULL)
-		return PI;
-
-	TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
-
-	HMODULE hMod;
-	DWORD cbNeeded;
-
-	if (EnumProcessModules(hProcess, &hMod, sizeof(hMod), &cbNeeded))
-	{
-		/******************************   FIND NAME AND ID    ***********************************/
-		GetModuleBaseName(hProcess, hMod, szProcessName, sizeof(szProcessName) / sizeof(TCHAR));
-		PI.ProcessName = szProcessName;
-		PI.ID = GetProcessId(hProcess);
-		/*****************************          END            ***********************************/
-
-
-
-		/****************************   LIST THREAD AND STATUS    ********************************/
-		HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
-		THREADENTRY32 te32;
-
-		// Take a snapshot of all running threads  
-		hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
-		if (hThreadSnap == INVALID_HANDLE_VALUE)
-			return PI;
-
-		// Fill in the size of the structure before using it. 
-		te32.dwSize = sizeof(THREADENTRY32);
-
-		// Retrieve information about the first thread,
-		// and exit if unsuccessful
-		if (!Thread32First(hThreadSnap, &te32))
-		{
-			CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
-			return PI;
-		}
-
-		// Now walk the thread list of the system, and display information about each thread associated with the specified process
-		do
-		{
-			if (te32.th32OwnerProcessID == GetProcessId(hProcess))
-			{
-				ThreadAndStatus ThreadInfo;
-				ThreadInfo.ID = te32.th32ThreadID;
-
-				HANDLE hThread = OpenThread(THREAD_ALL_ACCESS, false, ThreadInfo.ID);
-				ThreadInfo.ThreadStatus = threadState(hThread);
-
-				PI.ThreadList.push_back(ThreadInfo);
-			}
-		} while (Thread32Next(hThreadSnap, &te32));
-
-		//  Don't forget to clean up the snapshot object.
-		CloseHandle(hThreadSnap);
-		
-		return PI;
-	}
-}
-
-string threadState(HANDLE hThread)
-{
-	DWORD result = WaitForSingleObject(hThread, 0);
-
-	if (result == WAIT_OBJECT_0) {
-		// the thread handle is signaled - the thread has terminated
-		return "terminated";
-	}
-	else {
-		// the thread handle is not signaled - the thread is still alive
-		DWORD dwSuspendCount = SuspendThread(hThread);
-		ResumeThread(hThread);
-		if (dwSuspendCount == 0)
-			return "running";
-		else
-			return "suspend";
 	}
 }

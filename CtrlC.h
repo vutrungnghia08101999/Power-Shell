@@ -1,18 +1,20 @@
+#pragma once
 #include <windows.h> 
 #include <stdio.h> 
 #include <iostream>
 using namespace std;
 
-PROCESS_INFORMATION *hForegroundProcess = new PROCESS_INFORMATION;	//Contain information abut current foreProcess (There are only 1 foreground process at a time)
-
+HANDLE hForeProcess = NULL;			//hForeProcess is the unique global variable in my program. 
+									//When you type Ctrl-C. The program will create a thread run consoleHandler function 
+									//and kill this process if it is possible
 BOOL WINAPI consoleHandler(DWORD signal) {
-
-	hForegroundProcess->hProcess= INVALID_HANDLE_VALUE;
 	if (signal == CTRL_C_EVENT) {
-		if (hForegroundProcess->hProcess != INVALID_HANDLE_VALUE) {
-			TerminateProcess(hForegroundProcess->hProcess, 1);
-			hForegroundProcess->hProcess = INVALID_HANDLE_VALUE;
+		if (hForeProcess != NULL && hForeProcess != INVALID_HANDLE_VALUE) {
+			TerminateProcess(hForeProcess, 1);
 		}
+		hForeProcess = NULL;
+		cout << "\n";
+		cin.clear();
 	}
 	return TRUE;
 }
