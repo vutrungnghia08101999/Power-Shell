@@ -1,4 +1,3 @@
-#pragma once
 #include"commonFunction.h"
 #include"EnvironmentVariable.h"
 #include<ctype.h>	
@@ -18,8 +17,6 @@ void changeCurrentDirection(string userInput, string userCommand, EnvironmentVar
 	if (userCommand.size() >= 6 && userCommand.find_first_of('\"') == 3 && userCommand.find_last_of('\"') == userCommand.size() - 1) {
 		//cd "C:\Users\nghia.vt173284\Desktop" 
 		if (userCommand.substr(4, 2) == "c:" || userCommand.substr(4, 2) == "d:" || userCommand.substr(4, 2) == "e:") {
-
-			/*NOTICE: This code is not optimize, You should check to determine whether the path is exist or not*/
 			
 			string path = userCommand.substr(4, userCommand.size() - 5);
 			if(checkPath(path))

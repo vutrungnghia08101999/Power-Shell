@@ -1,4 +1,3 @@
-#pragma once
 #include"commonFunction.h"
 #include"EnvironmentVariable.h"
 
@@ -29,11 +28,20 @@ void changeEnv(string userCommand, EnvironmentVariable *Env)
 			}
 
 			cout << endl << s << " is not exist in path!!!" << endl;
+			return;
 		}
-		if (variable == "env:path+=")
-			Env->Path.push_back(s);
-		else if (variable == "env:currentpath=")
-			Env->currentPath = s;
+		if (variable == "env:path+="){
+			if(checkPath(s))
+				Env->Path.push_back(s);
+			else
+				cout << s << " is not exist!!!" << endl;
+		}
+		else if (variable == "env:currentpath="){
+			if(checkPath(s))
+				Env->Path.push_back(s);
+			else
+				cout << s << " is not exist!!!" << endl;
+		}
 		else if (variable == "env:username=")
 			Env->USERNAME = s;
 		else if (variable == "env:programfiles=")

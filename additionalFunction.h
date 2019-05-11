@@ -1,7 +1,5 @@
-#pragma once
 #include"commonFunction.h"
 #include"EnvironmentVariable.h"
-#include"utinity.h"
 #include<ctime>
 #include<tlhelp32.h>
 #include<tchar.h>
@@ -98,6 +96,6 @@ void additionalFunction(string userInput, string userCommand)
 	}
 
 	else {
-		cout << endl << "ERROR: Systax error!!! (utinity module) " << endl;
+		cout << endl << "ERROR: Systax error!!!" << endl;
 	}
 }
