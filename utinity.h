@@ -1,4 +1,3 @@
-#pragma once
 #include"commonFunction.h"
 #include"EnvironmentVariable.h"
 #include<ctime>

@@ -70,7 +70,7 @@ int main()
 			additionalFunction(userInput, userCommand);
 			break;
 		case 7:
-			Sleep(1);		//synchronize this thread and cosoleHandler thread. just for good user interface
+			Sleep(1);		//synchronize main thread and cosoleHandler thread. Just for good user interface
 			wrongManipulation(userInput);
 			break;
 		default:

@@ -1,4 +1,3 @@
-#pragma once
 #include"CtrlC.h"
 #include"commonFunction.h"
 #include"EnvironmentVariable.h"
@@ -67,6 +66,7 @@ void newProcess(string userInput, string userCommand, STARTUPINFO *startUpInfor,
 			correctPath = "/c " + correctPath;
 		}
 		else {
+			//There are some problem with this module. Shell can't open cpp, txt, ... file by subtime text
 			appPath = "C:\\Program Files\\Sublime Text 3\\sublime_text.exe";
 			correctPath = "/c " + correctPath;
 		}
@@ -100,7 +100,7 @@ void newProcess(string userInput, string userCommand, STARTUPINFO *startUpInfor,
 			*NUMBER_OF_PROCESS += 1;
 		}
 		else if (backOrFore == "fore") {
-			hForeProcess = pi.hProcess;
+			hForeProcess = pi.hProcess;		//This is for Ctrl-C Handle
 			WaitForSingleObject(pi.hProcess, INFINITE);
 		}
 		

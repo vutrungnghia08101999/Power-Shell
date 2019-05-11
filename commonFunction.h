@@ -99,6 +99,8 @@ vector<string> dirSimple(string path)
 
 bool checkPath(string path)
 {
+	if (path == "c:" || path == "d:" || path == "e:")
+		return true;
 	if (path.find_last_of('\\') == string::npos)
 		return false;
 
