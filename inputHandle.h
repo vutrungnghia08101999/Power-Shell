@@ -80,10 +80,22 @@ string normalize(string s)
 	 
 	string temp;
 	for (int i = 0; i < result.size(); ++i) {
-		if (isalpha(result[i]))
-			temp.push_back(tolower(result[i]));
-		else
+		if(result[i] == '\"'){
 			temp.push_back(result[i]);
+			++i;
+			while(i < result.size() && result[i] != '\"'){
+				temp.push_back(result[i]);
+				++i;
+			}
+			if(i < result.size())
+				temp.push_back(result[i]);
+		}
+		else{
+			if (isalpha(result[i]))
+				temp.push_back(tolower(result[i]));
+			else
+				temp.push_back(result[i]);
+		}
 	}
 	return temp;
 }
@@ -91,6 +103,8 @@ string normalize(string s)
 bool checkUtinity(string userCommand)
 {
 	if (userCommand == "date" || userCommand == "exit" || userCommand == "dir" || userCommand == "list" || userCommand == "getenv" || userCommand == "clear" || userCommand == "exitall")
+		return true;
+	if (userCommand.size() > 11 && userCommand.substr(0, 6) == "getenv")
 		return true;
 	if (userCommand.size() >= 10 && userCommand.substr(0, 10) == "terminate ")
 		return true;

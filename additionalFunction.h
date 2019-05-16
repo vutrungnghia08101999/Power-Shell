@@ -1,5 +1,4 @@
 #include"commonFunction.h"
-#include"EnvironmentVariable.h"
 #include<ctime>
 #include<tlhelp32.h>
 #include<tchar.h>
@@ -23,7 +22,7 @@ void additionalFunction(string userInput, string userCommand)
 
 		for (int i = 0; i < cProcesses; ++i) {
 			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, aProcesses[i]);
-			printf("   %-10d%-30s\n", GetProcessId(hProcess), ProcessName(hProcess).c_str());
+			printf("   %-10d%-30s\n", aProcesses[i], ProcessName(hProcess).c_str());
 		}
 		cout << endl << endl;
 	}

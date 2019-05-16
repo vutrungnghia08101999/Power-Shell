@@ -1,12 +1,11 @@
 #include"commonFunction.h"
-#include"EnvironmentVariable.h"
 #include<ctime>
 #include<tlhelp32.h>
 #include<tchar.h>
 #include<psapi.h>
 #include<ctype.h>
 
-void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PROCESS_INFORMATION *processList, int *NUMBER_OF_PROCESS)
+void utinity(string userInput, string userCommand, PROCESS_INFORMATION *processList, int *NUMBER_OF_PROCESS)
 {
 	if (userCommand == "date") {
 		time_t now = time(0);
@@ -29,7 +28,8 @@ void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PRO
 	}
 
 	else if (userCommand == "dir") {
-		vector<FileInformation> List = dir(Env->currentPath);
+		
+		vector<FileInformation> List = dir(getCurrentDirectory());
 		cout << endl << endl;
 		printf("%-15s%-15s%-15s%-30s\n", "Categories", "Date", "Time", "Name");
 		printf("%-15s%-15s%-15s%-30s\n", "-----------", "-------", "------", "---------");
@@ -64,7 +64,30 @@ void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PRO
 		cout << endl << endl;
 	}
 	else if (userCommand == "getenv") {
-		Env->print();
+		vector<string> Env = getenv();
+		for(int i = 0; i < Env.size(); ++i)
+			cout << Env[i] << endl;
+	}
+	else if (userCommand.size() > 11 && userCommand.substr(0, 6) == "getenv"){
+		int start = userCommand.find_first_of('\"');
+		int end = userCommand.find_last_of('\"');
+		if(start == string::npos || end == string::npos || start >= end - 1){
+			cout << "\nWrong Environment Variable name!" << endl << endl;
+			return;
+		}
+
+		string envName = userCommand.substr(start + 1, end - start - 1);
+		vector<string> Env = getenv();
+		for(int i = 0; i < Env.size(); ++i){
+			if(envName == Env[i].substr(0, Env[i].find_first_of('='))){
+				cout << endl << Env[i] << endl << endl;
+				return;
+			}
+		}
+
+		cout << "Variable is not exist!" << endl;
+		return;
+
 	}
 	else if (userCommand.size() >= 11 && userCommand.substr(0, 10) == "terminate ") {
 		string id = userCommand.substr(10);
@@ -85,6 +108,7 @@ void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PRO
 		}
 		else {
 			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			return;
 		}
 			
 	}

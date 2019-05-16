@@ -1,32 +1,40 @@
 #pragma once
-#include"EnvironmentVariable.h"
-#include<iostream>
-#include<sstream>
-#include<vector>
-#include<string>
-#include<Windows.h>
-#include<ctime>
-#include<tlhelp32.h>
-#include<tchar.h>
-#include<psapi.h>
-#include<ctype.h>
+#include "DataStructure.h"
+#include <iostream>
+#include <sstream>
+#include <vector>
+#include <string>
+#include <Windows.h>
+#include <ctime>
+#include <tlhelp32.h>
+#include <tchar.h>
+#include <psapi.h>
+#include <ctype.h>
 using namespace std;
+
+
 
 string toLower(string s);
 bool isInteger(string s);
 int toInteger(string s);
 void stringToTCHAR(TCHAR *p, string s);
-bool checkPath(string path);							//Given a path. Check it exits or not
-vector<FileInformation> dir(string path);						//return all files and folder in this path
-string threadState(HANDLE hThread);								//Determine state of a thread given its handle
-ProcessInformation ProcessInformations(HANDLE hProcess);		//return a struct that contains all information about the process such as name, ID, Thread list and state for each thread
-string ProcessName(HANDLE hProcess);							//Given a Handle return its name
-vector<ThreadAndStatus> getThreadIDAndState(HANDLE hProcess);	//Given a Process Handle return a vector contain all its threadID and state for each state
+string TCHARToString(TCHAR *p);
+bool checkPath(string path);		//Given a path. Check it exits or not
+string threadState(HANDLE hThread); //Determine state of a thread given its handle
+
+ProcessInformation ProcessInformations(HANDLE hProcess);	  //return a struct that contains all information about the process such as name, ID, Thread list and state for each thread
+string ProcessName(HANDLE hProcess);						  //Given a Handle return its name
+vector<ThreadAndStatus> getThreadIDAndState(HANDLE hProcess); //Given a Process Handle return a vector contain all its threadID and state for each state
+
+vector<FileInformation> dir(string path); //return all files and folder in this path
+vector<string> getenv();
+string getCurrentDirectory();
 
 //Vu Trung Nghia => vu trung nghia
 string toLower(string s)
 {
-	for (int i = 0; i < s.size(); ++i) {
+	for (int i = 0; i < s.size(); ++i)
+	{
 		if (isalpha(s[i]))
 			s[i] = tolower(s[i]);
 	}
@@ -36,8 +44,10 @@ string toLower(string s)
 
 bool isInteger(string s)
 {
-	for (int i = 0; i < s.size(); ++i) {
-		if (!isdigit(s[i])) {
+	for (int i = 0; i < s.size(); ++i)
+	{
+		if (!isdigit(s[i]))
+		{
 			return false;
 		}
 	}
@@ -96,7 +106,6 @@ vector<string> dirSimple(string path)
 	return List;
 }
 
-
 bool checkPath(string path)
 {
 	if (path == "c:" || path == "d:" || path == "e:")
@@ -108,7 +117,8 @@ bool checkPath(string path)
 	string target = path.substr(pivot + 1);
 	path = path.substr(0, pivot);
 	vector<string> ListFolder = dirSimple(path);
-	for (int i = 0; i < ListFolder.size(); ++i) {
+	for (int i = 0; i < ListFolder.size(); ++i)
+	{
 		if (target == toLower(ListFolder[i]))
 			return true;
 	}
@@ -132,7 +142,8 @@ vector<FileInformation> dir(string path)
 	hFind = FindFirstFile(p, &FindFileData);
 	do
 	{
-		if (FindFileData.dwFileAttributes == 16) {
+		if (FindFileData.dwFileAttributes == 16)
+		{
 			timeLastWrite = FindFileData.ftLastWriteTime;
 			FileTimeToSystemTime(&timeLastWrite, &convertTime);
 			string date = to_string(convertTime.wDay) + '/' + to_string(convertTime.wMonth) + '/' + to_string(convertTime.wYear);
@@ -146,7 +157,8 @@ vector<FileInformation> dir(string path)
 	hFind = FindFirstFile(p, &FindFileData);
 	do
 	{
-		if (FindFileData.dwFileAttributes == 32) {
+		if (FindFileData.dwFileAttributes == 32)
+		{
 			timeLastWrite = FindFileData.ftLastWriteTime;
 			FileTimeToSystemTime(&timeLastWrite, &convertTime);
 			string date = to_string(convertTime.wDay) + '/' + to_string(convertTime.wMonth) + '/' + to_string(convertTime.wYear);
@@ -164,11 +176,13 @@ string threadState(HANDLE hThread)
 {
 	DWORD result = WaitForSingleObject(hThread, 0);
 
-	if (result == WAIT_OBJECT_0) {
+	if (result == WAIT_OBJECT_0)
+	{
 		// the thread handle is signaled - the thread has terminated
 		return "terminated";
 	}
-	else {
+	else
+	{
 		// the thread handle is not signaled - the thread is still alive
 		DWORD dwSuspendCount = SuspendThread(hThread);
 		ResumeThread(hThread);
@@ -199,25 +213,23 @@ ProcessInformation ProcessInformations(HANDLE hProcess)
 		PI.ID = GetProcessId(hProcess);
 		/*****************************          END            ***********************************/
 
-
-
 		/****************************   LIST THREAD AND STATUS    ********************************/
 		HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 		THREADENTRY32 te32;
 
-		// Take a snapshot of all running threads  
+		// Take a snapshot of all running threads
 		hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
 		if (hThreadSnap == INVALID_HANDLE_VALUE)
 			return PI;
 
-		// Fill in the size of the structure before using it. 
+		// Fill in the size of the structure before using it.
 		te32.dwSize = sizeof(THREADENTRY32);
 
 		// Retrieve information about the first thread,
 		// and exit if unsuccessful
 		if (!Thread32First(hThreadSnap, &te32))
 		{
-			CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
+			CloseHandle(hThreadSnap); // Must clean up the snapshot object!
 			return PI;
 		}
 
@@ -250,19 +262,19 @@ vector<ThreadAndStatus> getThreadIDAndState(HANDLE hProcess)
 	HANDLE hThreadSnap = INVALID_HANDLE_VALUE;
 	THREADENTRY32 te32;
 
-	// Take a snapshot of all running threads  
+	// Take a snapshot of all running threads
 	hThreadSnap = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, 0);
 	if (hThreadSnap == INVALID_HANDLE_VALUE)
 		return threadList;
 
-	// Fill in the size of the structure before using it. 
+	// Fill in the size of the structure before using it.
 	te32.dwSize = sizeof(THREADENTRY32);
 
 	// Retrieve information about the first thread,
 	// and exit if unsuccessful
 	if (!Thread32First(hThreadSnap, &te32))
 	{
-		CloseHandle(hThreadSnap);     // Must clean up the snapshot object!
+		CloseHandle(hThreadSnap); // Must clean up the snapshot object!
 		return threadList;
 	}
 
@@ -306,4 +318,47 @@ string ProcessName(HANDLE hProcess)
 	return "<unknown>";
 }
 
+vector<string> getenv()
+{
+	vector<string> Env;
+	const char *pointer = (char *)GetEnvironmentStrings();
+	if (pointer == NULL)
+		return Env;
 
+	int start = 0;
+	int i = 0;
+	while (pointer[i] != '\0' || pointer[i + 1] != 0)
+	{
+		vector<string> Env;
+		string s;
+		LPTSTR lpszVariable;
+		LPVOID lpvEnv;
+		// Get a pointer to the environment block.
+
+		lpvEnv = GetEnvironmentStrings();
+
+		// If the returned pointer is NULL, exit.
+		// Variable strings are separated by NULL byte, and the block is terminated by a NULL byte.
+
+		for (lpszVariable = (LPTSTR)lpvEnv; *lpszVariable; lpszVariable++)
+		{
+			s = "";
+			while (*lpszVariable)
+				s.push_back(*lpszVariable++);
+			Env.push_back(s);
+		}
+
+		return Env;
+	}
+}
+
+string getCurrentDirectory()
+{
+	TCHAR NPath[MAX_PATH];
+	int x = GetCurrentDirectory(MAX_PATH, NPath);
+	string s = "";
+
+	for (int i = 0; i < x; ++i)
+		s.push_back(NPath[i]);
+	return s;
+}

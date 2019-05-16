@@ -1,8 +1,8 @@
 #include"inputHandle.h"
 #include"help.h"
 #include"newProcess.h"
-#include"changeCurrentDirection.h"
-#include"changeEnv.h"
+#include"setCurrentDirectory.h"
+#include"setEnv.h"
 #include"utinity.h"
 #include"wrongManipulation.h"
 #include"additionalFunction.h"
@@ -17,19 +17,19 @@ using namespace std;
 
 string inputHandle(string userInput, int *manipulation);
 void help(string usercommand);
-void newProcess(string userInput, string userCommand, STARTUPINFO *startUpInfor, PROCESS_INFORMATION *processList, EnvironmentVariable *Env, int *NUMBER_OF_PROCESS);
-void changeCurrentDirection(string userInput, string userCommand, EnvironmentVariable *Env);
-void changeEnv(string userCommand, EnvironmentVariable *Env);
-void utinity(string userInput, string userCommand, EnvironmentVariable *Env, PROCESS_INFORMATION *processList, int *NUMBER_OF_PROCESS);
+void newProcess(string userInput, string userCommand, STARTUPINFO *startUpInfor, PROCESS_INFORMATION *processList, int *NUMBER_OF_PROCESS);
+void setCurrentDirection(string userInput, string userCommand);
+void setEnv(string userCommand);
+void utinity(string userInput, string userCommand, PROCESS_INFORMATION *processList, int *NUMBER_OF_PROCESS);
 void additionalFunction(string userInput, string userCommand);
 void wrongManipulation(string userInput);
 
 int main()
 {
 	SetConsoleCtrlHandler(consoleHandler, TRUE);		//CTRL-C Handle
-
+	cout << "Windows PowerShell" << endl;
+	cout << "Copyright (C) Microsoft Corporation. All rights reserved." << endl << endl;
 	int manipulation = -1;
-	EnvironmentVariable *Env = new EnvironmentVariable();
 
 	STARTUPINFO startUpInfor[1000];
 	PROCESS_INFORMATION processList[1000];
@@ -44,7 +44,7 @@ int main()
 	while (true) {
 
 		//
-		printf("MyShell %s>", Env->currentPath.c_str());
+		printf("MyShell %s>", getCurrentDirectory().c_str());
 		//
 
 		getline(cin, userInput);
@@ -55,16 +55,16 @@ int main()
 			help(userCommand);
 			break;
 		case 2:
-			newProcess(userInput, userCommand, startUpInfor, processList, Env, &NUMBER_OF_PROCESS);
+			newProcess(userInput, userCommand, startUpInfor, processList, &NUMBER_OF_PROCESS);
 			break;
 		case 3:
-			changeCurrentDirection(userInput, userCommand, Env);
+			changeCurrentDirection(userInput, userCommand);
 			break;
 		case 4:
-			changeEnv(userCommand, Env);
+			setEnv(userCommand);
 			break;
 		case 5:
-			utinity(userInput, userCommand, Env, processList, &NUMBER_OF_PROCESS);
+			utinity(userInput, userCommand, processList, &NUMBER_OF_PROCESS);
 			break;
 		case 6:
 			additionalFunction(userInput, userCommand);
