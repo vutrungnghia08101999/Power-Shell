@@ -1,6 +1,7 @@
 # Power-Shell
 
 Shell includes 8 module:
+
         - Help
         - New Process
         - Set Current Directory
@@ -11,10 +12,12 @@ Shell includes 8 module:
         - Wrong input
       
 I. Help Module
+
         - Describe the structure of the Shell and all support command in Shell
 
         help
 II. New Process Module
+
         - Create new process type .exe, .bat
 
         1. Create back ground process:
@@ -25,6 +28,7 @@ II. New Process Module
                 fore "C:\Users\nghia.vt173284\Desktop\main.exe"
 
 III. Set Current Directory
+
         - Change current path
 
         cd "./.."
@@ -35,6 +39,7 @@ IIII. Set environment Variable
 
         env: "VariablName" "Value"
 V. Unitity Module
+
         - Some command to support Shell
 
         date
@@ -48,6 +53,7 @@ V. Unitity Module
         resume ProcessID
         suspend ProcessID
 VI. Additional Function
+
         - Allow Shell to manage all the processes in the computer
         
         listall
@@ -57,9 +63,12 @@ VI. Additional Function
         terminateadd Process ID
 
 VII. Ctrl-C Module
+
         - Handle Ctrl-C signal
         - Terminate a foreground process
+        
 VIII. Wrong Input Module
+
         - Print message error
 
 IX. Compile: 
