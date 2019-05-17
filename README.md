@@ -35,6 +35,7 @@ III. Set Current Directory
         cd "main"
         cd "C:\Users\nghia.vt173284\Desktop\main"
 IIII. Set environment Variable
+
         - Change environment variable
 
         env: "VariablName" "Value"
@@ -52,6 +53,7 @@ V. Unitity Module
         terminate ProcessID
         resume ProcessID
         suspend ProcessID
+        
 VI. Additional Function
 
         - Allow Shell to manage all the processes in the computer
