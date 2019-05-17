@@ -1,4 +1,4 @@
-# Shell
+# Windows Shell
 
 Shell includes 8 module:
 
