@@ -9,6 +9,7 @@ Shell includes 8 module:
         - Additional Function
         - Ctrl-C
         - Wrong input
+      
 I. Help Module
         - Describe the structure of the Shell and all support command in Shell
 
