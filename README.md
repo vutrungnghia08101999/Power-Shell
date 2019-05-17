@@ -1,4 +1,4 @@
-# Power-Shell
+# Shell
 
 Shell includes 8 module:
 
