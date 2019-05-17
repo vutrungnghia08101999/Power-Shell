@@ -29,6 +29,7 @@ vector<ThreadAndStatus> getThreadIDAndState(HANDLE hProcess); //Given a Process 
 vector<FileInformation> dir(string path); //return all files and folder in this path
 vector<string> getenv();
 string getCurrentDirectory();
+void printError(string s);
 
 //Vu Trung Nghia => vu trung nghia
 string toLower(string s)
@@ -66,63 +67,6 @@ void stringToTCHAR(TCHAR *p, string s)
 {
 	for (int i = 0; i < s.size(); ++i)
 		p[i] = s[i];
-}
-
-vector<string> dirSimple(string path)
-{
-	WIN32_FIND_DATA FindFileData;
-	HANDLE hFind;
-	vector<string> List;
-
-	/************************************************************************/
-	//This is the special case
-	if (path == "c:")
-		List.push_back("users");
-	if (path.size() >= 22 && path == "c:\\users\\nghia.vt173284")
-		List.push_back("desktop");
-	/*************************************************************************/
-
-	path += "\\*";
-	TCHAR p[200] = {};
-	for (int i = 0; i < path.size(); ++i)
-		p[i] = path[i];
-
-	hFind = FindFirstFile(p, &FindFileData);
-	do
-	{
-		if (FindFileData.dwFileAttributes == 16)
-			List.push_back(FindFileData.cFileName);
-	} while (FindNextFile(hFind, &FindFileData));
-	FindClose(hFind);
-
-	hFind = FindFirstFile(p, &FindFileData);
-	do
-	{
-		if (FindFileData.dwFileAttributes == 32)
-			List.push_back(FindFileData.cFileName);
-	} while (FindNextFile(hFind, &FindFileData));
-	FindClose(hFind);
-
-	return List;
-}
-
-bool checkPath(string path)
-{
-	if (path == "c:" || path == "d:" || path == "e:")
-		return true;
-	if (path.find_last_of('\\') == string::npos)
-		return false;
-
-	int pivot = path.find_last_of('\\');
-	string target = path.substr(pivot + 1);
-	path = path.substr(0, pivot);
-	vector<string> ListFolder = dirSimple(path);
-	for (int i = 0; i < ListFolder.size(); ++i)
-	{
-		if (target == toLower(ListFolder[i]))
-			return true;
-	}
-	return false;
 }
 
 vector<FileInformation> dir(string path)
@@ -361,4 +305,12 @@ string getCurrentDirectory()
 	for (int i = 0; i < x; ++i)
 		s.push_back(NPath[i]);
 	return s;
+}
+
+void printError(string s)
+{
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
+	cout << endl << s << endl;
+	SetConsoleTextAttribute(hConsole, 15);
 }

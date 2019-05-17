@@ -17,7 +17,7 @@ void newProcess(string userInput, string userCommand, STARTUPINFO *startUpInfor,
 		si.cb = sizeof(si);
 
 		if (!CreateProcess(NULL, p, NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &pi)) {
-			cout << endl << endl << "[ERROR]: " << path << " is not exist!!!" << endl << endl;
+			printError("[ERROR]: " + path + " is not exist!!!");
 			return;
 		}
 
@@ -33,7 +33,7 @@ void newProcess(string userInput, string userCommand, STARTUPINFO *startUpInfor,
 		
 	}
 	else {
-		cout << endl << "Systex Error: " << userInput << " is not recognized as the name of a cmdlet, function, script file, oroperable program.Check the spelling of the name, or if a path was included, verify that the path is correct and try again." << endl;
+		printError("Systex Error: " + userInput + " is not recognized as the name of a cmdlet, function, script file, oroperable program.Check the spelling of the name, or if a path was included, verify that the path is correct and try again.");
 	}
 }
 	

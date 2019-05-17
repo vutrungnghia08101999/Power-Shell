@@ -72,7 +72,7 @@ void utinity(string userInput, string userCommand, PROCESS_INFORMATION *processL
 		int start = userCommand.find_first_of('\"');
 		int end = userCommand.find_last_of('\"');
 		if(start == string::npos || end == string::npos || start >= end - 1){
-			cout << "\nWrong Environment Variable name!" << endl << endl;
+			printError("Wrong Environment Variable name!");
 			return;
 		}
 
@@ -84,8 +84,7 @@ void utinity(string userInput, string userCommand, PROCESS_INFORMATION *processL
 				return;
 			}
 		}
-
-		cout << "Variable is not exist!" << endl;
+		printError("Variable is not exist!");
 		return;
 
 	}
@@ -103,11 +102,10 @@ void utinity(string userInput, string userCommand, PROCESS_INFORMATION *processL
 					return;
 				}
 			}
-
-			cout << endl << endl << "ERROR: " << ProcessID << " is not an ID of any process in the processList that MyShell manage!!!" << endl << endl;
+			printError("ERROR: " + to_string(ProcessID) + " is not an ID of any process in the processList that MyShell manage!!!");
 		}
 		else {
-			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			printError("ERROR: " + id + " is not an integer!");
 			return;
 		}
 			
@@ -127,11 +125,10 @@ void utinity(string userInput, string userCommand, PROCESS_INFORMATION *processL
 					return;
 				}
 			}
-
-			cout << endl << endl << "ERROR: " << ProcessID << " is not an ID of any process in the processList that MyShell manage!!!" << endl << endl;
+			printError("ERROR: " + to_string(ProcessID) + " is not an ID of any process in the processList that MyShell manage!!!");
 		}
 		else {
-			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			printError("ERROR: " + id + " is not an integer!");
 		}
 	}
 	else if (userCommand.size() >= 8 && userCommand.substr(0, 7) == "resume ") {
@@ -150,13 +147,13 @@ void utinity(string userInput, string userCommand, PROCESS_INFORMATION *processL
 				}
 			}
 
-			cout << endl << endl << "ERROR: " << ProcessID << " is not an ID of any process in the processList that MyShell manage!!!" << endl << endl;
+			printError("ERROR: " + to_string(ProcessID) + " is not an ID of any process in the processList that MyShell manage!!!");
 		}
 		else {
-			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			printError("ERROR: " + id + " is not an integer!");
 		}
 	}
 	else {
-		cout << endl << "ERROR: Systax error!!! (utinity module) " << endl;
+		printError("ERROR: Systax error!!! (utinity module) ");
 	}
 }

@@ -43,7 +43,7 @@ void additionalFunction(string userInput, string userCommand)
 			cout << endl << endl;
 		}
 		else {
-			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			printError("ERROR: " + id + " is not an integer!");
 		}
 
 	}
@@ -61,7 +61,8 @@ void additionalFunction(string userInput, string userCommand)
 			}
 		}
 		else {
-			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			
+			printError("ERROR: " + id + " is not an integer!");
 		}
 	}
 	else if (userCommand.size() >= 11 && userCommand.substr(0, 10) == "resumeadd ") {
@@ -78,7 +79,7 @@ void additionalFunction(string userInput, string userCommand)
 			}
 		}
 		else {
-			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			printError("ERROR: " + id + " is not an integer!");
 		}
 	}
 
@@ -90,11 +91,11 @@ void additionalFunction(string userInput, string userCommand)
 			TerminateProcess(hProcess, 1);
 		}
 		else {
-			cout << endl << "ERROR: " << id << " is not an integer!" << endl << endl;
+			printError("ERROR: " + id + " is not an integer!");
 		}
 	}
 
 	else {
-		cout << endl << "ERROR: Systax error!!!" << endl;
+		printError("ERROR: Systax error!!!");
 	}
 }

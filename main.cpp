@@ -27,6 +27,10 @@ void wrongManipulation(string userInput);
 int main()
 {
 	SetConsoleCtrlHandler(consoleHandler, TRUE);		//CTRL-C Handle
+
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 15);
+	
 	cout << "Windows PowerShell" << endl;
 	cout << "Copyright (C) Microsoft Corporation. All rights reserved." << endl << endl;
 	int manipulation = -1;
@@ -42,12 +46,10 @@ int main()
 	string userInput;
 	string userCommand;
 	while (true) {
-
-		//
 		printf("MyShell %s>", getCurrentDirectory().c_str());
-		//
-
+		SetConsoleTextAttribute(hConsole, 6);		
 		getline(cin, userInput);
+		SetConsoleTextAttribute(hConsole, 15);
 		userCommand = inputHandle(userInput, &manipulation);
 		switch (manipulation)
 		{
