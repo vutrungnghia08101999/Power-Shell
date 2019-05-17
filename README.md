@@ -75,4 +75,4 @@ VIII. Wrong Input Module
 
 IX. Compile: 
         
-        g++ main.cpp -o main -std=c++11 -lpsapi
+        g++ main.cpp -o MyShell -std=c++11 -lpsapi
