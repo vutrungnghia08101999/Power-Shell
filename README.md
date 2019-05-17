@@ -23,7 +23,7 @@ II. New Process Module
                 fore "main.exe"
                 fore "C:\Users\nghia.vt173284\Desktop\main.exe"
 
-III. Set Current irectory
+III. Set Current Directory
         - Change current path
 
         cd "./.."
@@ -61,4 +61,6 @@ VII. Ctrl-C Module
 VIII. Wrong Input Module
         - Print message error
 
-Compile: g++ main.cpp -o main -std=c++11 -lpsapi
+IX. Compile: 
+        
+        g++ main.cpp -o main -std=c++11 -lpsapi
