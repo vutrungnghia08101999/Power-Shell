@@ -32,7 +32,7 @@ int main()
 	SetConsoleTextAttribute(hConsole, 15);
 	
 	cout << "Windows PowerShell" << endl;
-	cout << "Authors: Vu Trung Nghia - Le Vu Loi. All rights reserved." << endl << endl;
+	cout << "Copyright (C) Microsoft Corporation. All rights reserved." << endl << endl;
 	int manipulation = -1;
 
 	STARTUPINFO startUpInfor[1000];
